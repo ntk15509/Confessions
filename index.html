@@ -158,7 +158,9 @@
 
                 <h3>⚠️ Lưu ý khi sử dụng</h3>
                 <p>Vì hệ thống chạy qua máy chủ trung gian nên đôi lúc sẽ bị chậm một chút khi có quá nhiều bạn truy cập cùng lúc. Nếu gửi bài hoặc tải trang bị chậm, bạn hãy kiên nhẫn đợi giây lát hoặc tải lại trang nhé!</p>
-
+                <button type="button" id="feedback_toggle_btn" class="feedback_toggle_btn">
+                    <i class="fa-solid fa-comment-dots"></i> Gửi góp ý
+                </button>
                 <div class="project_author">
                     <span>A project by</span>
                     <div>
@@ -170,7 +172,27 @@
                         </a>
                     </div>
                 </div>
+                
             </div>
+        </div>
+    </div>
+
+    <!-- Modal gửi góp ý -->
+    <div id="feedback_modal" class="readme_modal_overlay">
+        <div class="readme_modal_content feedback_modal_content">
+            <button type="button" id="close_feedback_btn" class="close_readme_btn" title="Đóng bảng góp ý">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h2><i class="fa-solid fa-comment-dots" style="color: var(--accent-color);"></i> Gửi góp ý</h2>
+            <form id="feedback_form" class="feedback_form" autocomplete="off">
+                <label for="feedback_input">Chia sẻ góp ý của bạn</label>
+                <textarea id="feedback_input" rows="5" maxlength="20000" placeholder="Nhập góp ý hoặc đề xuất của bạn..."></textarea>
+                <p id="feedback_error"></p>
+                <button type="submit" id="feedback_submit_btn">
+                    <span>Gửi</span>
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
         </div>
     </div>
 

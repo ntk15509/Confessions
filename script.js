@@ -1,9 +1,5 @@
-/*  17:36
-    21/08/2026
-*/
-
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQW25_w_EmNgBsBR2Ud7_dj2Ev6hwjp-G3qLqLwWARGHuCFRin9MOrIeLkRkSuIc8aYg/exec";
-const LIKED_KEY = "nhs_liked_ids_v2";
+const LIKED_KEY = "nhs_liked_uuids_v1";
 const MAX_LENGTH = 20000;
 
 const form = document.querySelector("#confession_form");
@@ -16,7 +12,7 @@ const backdrop = document.querySelector("#confession_backdrop");
 
 let likedIds = loadLikedIds();
 let currentConfessions = [];
-let activeOpenRowId = null;
+let activeOpenUuid = null; 
 let lastRawDataString = "";
 let searchQuery = "";
 let searchDateQuery = "";
@@ -68,7 +64,7 @@ if (readmeToggleBtn && readmeModal) {
 function closeReadme() {
     if (readmeModal) {
         readmeModal.classList.remove("active");
-        if (!activeOpenRowId) {
+        if (!activeOpenUuid) {
             document.body.classList.remove("confession-modal-open");
         }
     }
@@ -190,14 +186,14 @@ const sharedEmojiListHTML = `
 `;
 
 function updateOrRenderBox(confession) {
-    const strId = String(confession.rowId);
-    let box = list.querySelector(`.box[data-id="${confession.rowId}"]`);
-    const isLiked = likedIds.includes(strId);
+    const uuid = String(confession.uuid);
+    let box = list.querySelector(`.box[data-uuid="${uuid}"]`);
+    const isLiked = likedIds.includes(uuid);
 
     if (!box) {
         box = document.createElement("div");
         box.className = "box";
-        box.dataset.id = confession.rowId;
+        box.dataset.uuid = uuid;
 
         box.innerHTML = `
             <button type="button" class="close_modal_btn" title="Đóng"><i class="fa-solid fa-xmark"></i></button>
@@ -229,7 +225,7 @@ function updateOrRenderBox(confession) {
         const heartBtn = box.querySelector(".heart_btn");
         heartBtn.addEventListener("click", (e) => {
             e.stopPropagation();
-            toggleLike(confession.rowId);
+            toggleLike(confession.uuid);
         });
 
         const readMoreBtn = box.querySelector(".read_more_btn");
@@ -243,8 +239,8 @@ function updateOrRenderBox(confession) {
             const isOpening = commentsSection.hidden;
 
             if (isOpening) {
-                if (activeOpenRowId && activeOpenRowId !== strId) {
-                    const prevBox = list.querySelector(`.box[data-id="${activeOpenRowId}"]`);
+                if (activeOpenUuid && activeOpenUuid !== uuid) {
+                    const prevBox = list.querySelector(`.box[data-uuid="${activeOpenUuid}"]`);
                     if (prevBox) {
                         const prevSection = prevBox.querySelector(".comments_section");
                         if (prevSection) prevSection.hidden = true;
@@ -257,13 +253,13 @@ function updateOrRenderBox(confession) {
                 if (backdrop) backdrop.classList.add("active");
                 document.body.classList.add("confession-modal-open");
                 
-                activeOpenRowId = strId;
+                activeOpenUuid = uuid;
             }
         };
 
         function closeActiveModal() {
-            if (!activeOpenRowId) return;
-            const activeBox = list.querySelector(`.box[data-id="${activeOpenRowId}"]`);
+            if (!activeOpenUuid) return;
+            const activeBox = list.querySelector(`.box[data-uuid="${activeOpenUuid}"]`);
             if (activeBox) {
                 const commentsSection = activeBox.querySelector(".comments_section");
                 if (commentsSection) commentsSection.hidden = true;
@@ -271,7 +267,7 @@ function updateOrRenderBox(confession) {
             }
             if (backdrop) backdrop.classList.remove("active");
             document.body.classList.remove("confession-modal-open");
-            activeOpenRowId = null;
+            activeOpenUuid = null;
         }
 
         const closeBtn = box.querySelector(".close_modal_btn");
@@ -320,11 +316,11 @@ function updateOrRenderBox(confession) {
             if (!text) return;
             
             commentEmojiContainer.style.display = "none";
-            await addComment(confession.rowId, text, commentSubmitBtn, commentInput);
+            await addComment(confession.uuid, text, commentSubmitBtn, commentInput);
         });
     }
 
-    const isOpen = (activeOpenRowId === strId);
+    const isOpen = (activeOpenUuid === uuid);
     const pEl = box.querySelector(".confession_content p");
     pEl.textContent = confession.content;
 
@@ -450,13 +446,13 @@ async function loadApprovedConfessions() {
         lastRawDataString = rawString;
 
         currentConfessions = data.map((item, index) => {
-            const strId = String(item.rowId);
-            const existing = currentConfessions.find(c => String(c.rowId) === strId);
+            const uuid = String(item.uuid);
+            const existing = currentConfessions.find(c => String(c.uuid) === uuid);
             const serverLikes = Number(item.likes) || 0;
             const likes = existing ? Math.max(existing.likes, serverLikes) : serverLikes;
 
             return {
-                rowId: item.rowId || index,
+                uuid: item.uuid,
                 number: index + 1,
                 content: item.content || "",
                 time: item.time,
@@ -476,14 +472,14 @@ async function loadApprovedConfessions() {
     }
 }
 
-async function toggleLike(rowId) {
-    const strId = String(rowId);
-    if (likedIds.includes(strId)) return;
+async function toggleLike(uuid) {
+    const strUuid = String(uuid);
+    if (likedIds.includes(strUuid)) return;
 
-    likedIds.push(strId);
+    likedIds.push(strUuid);
     saveLikedIds(likedIds);
 
-    const confession = currentConfessions.find(c => String(c.rowId) === strId);
+    const confession = currentConfessions.find(c => String(c.uuid) === strUuid);
     if (confession) {
         confession.likes = (confession.likes || 0) + 1;
         renderAll();
@@ -494,18 +490,18 @@ async function toggleLike(rowId) {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: "like", rowId: Number(rowId) })
+            body: JSON.stringify({ action: "like", uuid: strUuid })
         });
     } catch (err) {
         console.error("Lỗi cập nhật lượt thích:", err);
     }
 }
 
-async function addComment(rowId, text, submitBtn, commentInput) {
-    const strId = String(rowId);
-    const confession = currentConfessions.find(c => String(c.rowId) === strId);
+async function addComment(uuid, text, submitBtn, commentInput) {
+    const strUuid = String(uuid);
+    const confession = currentConfessions.find(c => String(c.uuid) === strUuid);
     
-    // 1. Hiển thị ngay lập tức lên giao diện nguyên bản 100% (giữ nguyên dấu '=' nếu người dùng nhập)
+    // 1. Hiển thị ngay lập tức lên giao diện
     const tempComment = {
         content: text,
         time: new Date().toISOString()
@@ -520,7 +516,7 @@ async function addComment(rowId, text, submitBtn, commentInput) {
     commentInput.value = "";
     commentInput.style.height = "46px";
 
-    // 2. Tạo bản gửi lên Server: Nếu bắt đầu bằng '=' thì tự động thêm dấu `'` vào đầu để Google Sheets an toàn
+    // 2. Tạo bản gửi lên Server
     let serverSendText = text;
     if (serverSendText.startsWith("=")) {
         serverSendText = "'" + serverSendText;
@@ -531,10 +527,10 @@ async function addComment(rowId, text, submitBtn, commentInput) {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: "comment", rowId: Number(rowId), content: serverSendText })
+            body: JSON.stringify({ action: "comment", uuid: strUuid, content: serverSendText })
         });
         
-        // Delay 1.5 giây để server lưu xong vào Sheets, sau đó mới đồng bộ lại dữ liệu thật từ máy chủ
+        // Delay 1.5 giây để server lưu xong vào Sheets, sau đó mới đồng bộ lại dữ liệu
         setTimeout(async () => {
             lastRawDataString = "";
             await loadApprovedConfessions();
@@ -546,6 +542,82 @@ async function addComment(rowId, text, submitBtn, commentInput) {
         await loadApprovedConfessions();
     }
 }
+
+const feedbackToggleBtn = document.querySelector("#feedback_toggle_btn");
+const feedbackModal = document.querySelector("#feedback_modal");
+const closeFeedbackBtn = document.querySelector("#close_feedback_btn");
+const feedbackForm = document.querySelector("#feedback_form");
+const feedbackInput = document.querySelector("#feedback_input");
+const feedbackError = document.querySelector("#feedback_error");
+const feedbackSubmitBtn = document.querySelector("#feedback_submit_btn");
+
+function openFeedback() {
+    feedbackModal.classList.add("active");
+    document.body.classList.add("confession-modal-open");
+    feedbackInput.focus();
+}
+
+function closeFeedback() {
+    feedbackModal.classList.remove("active");
+    document.body.classList.remove("confession-modal-open");
+}
+
+feedbackToggleBtn.addEventListener("click", openFeedback);
+closeFeedbackBtn.addEventListener("click", closeFeedback);
+
+feedbackModal.addEventListener("click", (event) => {
+    if (event.target === feedbackModal) {
+        closeFeedback();
+    }
+});
+
+feedbackForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const content = feedbackInput.value.trim();
+
+    if (!content) {
+        feedbackError.textContent = "Vui lòng nhập nội dung góp ý.";
+        feedbackInput.focus();
+        return;
+    }
+
+    feedbackSubmitBtn.disabled = true;
+    feedbackSubmitBtn.innerHTML =
+        `<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...`;
+
+    try {
+        await fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify({
+                action: "feedback",
+                content: content
+            })
+        });
+
+        feedbackInput.value = "";
+        feedbackError.textContent = "";
+        closeFeedback();
+
+        alert("Cảm ơn bạn! Góp ý đã được gửi thành công.");
+    } catch (error) {
+        console.error("Lỗi gửi góp ý:", error);
+        feedbackError.textContent =
+            "Không thể gửi góp ý. Vui lòng thử lại sau.";
+    } finally {
+        feedbackSubmitBtn.disabled = false;
+        feedbackSubmitBtn.innerHTML =
+            `<span>Gửi</span><i class="fa-solid fa-paper-plane"></i>`;
+    }
+});
+
+feedbackInput.addEventListener("input", () => {
+    feedbackError.textContent = "";
+});
 
 function showError(message) {
     if (errorBox) errorBox.textContent = message;
@@ -627,7 +699,6 @@ if (form) {
             return;
         }
 
-        // Xử lý chống lỗi Google Sheets nhận diện nhầm confession là công thức
         if (content.startsWith("=")) {
             content = "'" + content;
         }
