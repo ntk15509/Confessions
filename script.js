@@ -1,5 +1,9 @@
+/* 
+    03/09/2026
+*/
+
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQW25_w_EmNgBsBR2Ud7_dj2Ev6hwjp-G3qLqLwWARGHuCFRin9MOrIeLkRkSuIc8aYg/exec";
-const LIKED_KEY = "nhs_liked_uuids_v1";
+const LIKED_KEY = "nhs_liked_uuids_v1"; 
 const MAX_LENGTH = 20000;
 
 const form = document.querySelector("#confession_form");
@@ -12,7 +16,7 @@ const backdrop = document.querySelector("#confession_backdrop");
 
 let likedIds = loadLikedIds();
 let currentConfessions = [];
-let activeOpenUuid = null; 
+let activeOpenUuid = null; // Replaced activeOpenRowId with activeOpenUuid
 let lastRawDataString = "";
 let searchQuery = "";
 let searchDateQuery = "";
