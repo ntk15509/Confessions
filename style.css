@@ -1,3 +1,8 @@
+
+/*
+    05/09/2026
+*/
+
 :root {
     --primary-color: #f43f5e;
     --primary-hover: #e11d48;
@@ -985,7 +990,6 @@ h4 {
     color: #f1f5f9;
 }
 
-/* --- Phần thông tin tác giả --- */
 .project_author {
     margin-top: 25px;
     padding-top: 15px;
@@ -1005,8 +1009,8 @@ h4 {
     font-weight: 700;
     text-decoration: none; 
     border-bottom: 1.5px solid var(--accent-color);
-    padding-bottom: 0px; /* Đã hạ xuống 0px để sát nét vào chân chữ */
-    line-height: 1.1;     /* Tùy chỉnh line-height cho vừa vặn */
+    padding-bottom: 0px; 
+    line-height: 1.1;     
     transition: all 0.2s ease;
     display: inline-block;
 }

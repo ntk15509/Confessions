@@ -1,5 +1,5 @@
 /* 
-    03/09/2026
+    05/09/2026
 */
 
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQW25_w_EmNgBsBR2Ud7_dj2Ev6hwjp-G3qLqLwWARGHuCFRin9MOrIeLkRkSuIc8aYg/exec";
@@ -16,10 +16,21 @@ const backdrop = document.querySelector("#confession_backdrop");
 
 let likedIds = loadLikedIds();
 let currentConfessions = [];
-let activeOpenUuid = null; // Replaced activeOpenRowId with activeOpenUuid
+let activeOpenUuid = null; 
 let lastRawDataString = "";
 let searchQuery = "";
 let searchDateQuery = "";
+
+// --- Hàm cập nhật Logo ---
+function updateLogo(isDark) {
+    const logoImg = document.querySelector("#picture img");
+    if (!logoImg) return;
+    if (isDark) {
+        logoImg.src = logoImg.getAttribute("data-dark-src");
+    } else {
+        logoImg.src = logoImg.getAttribute("data-light-src");
+    }
+}
 
 // --- Xử lý Dark/Light Mode ---
 const themeToggleBtn = document.querySelector("#theme_toggle_btn");
@@ -28,10 +39,13 @@ const userTheme = localStorage.getItem("nhs_theme");
 
 if (userTheme === "dark") {
     document.documentElement.setAttribute("data-theme", "dark");
+    updateLogo(true);
     if (themeToggleBtn) {
         themeToggleBtn.querySelector("i").className = "fa-solid fa-sun";
         if (themeText) themeText.textContent = "Chế độ sáng";
     }
+} else {
+    updateLogo(false);
 }
 
 if (themeToggleBtn) {
@@ -42,11 +56,13 @@ if (themeToggleBtn) {
         if (currentTheme === "dark") {
             document.documentElement.removeAttribute("data-theme");
             localStorage.setItem("nhs_theme", "light");
+            updateLogo(false);
             icon.className = "fa-solid fa-moon";
             if (themeText) themeText.textContent = "Chế độ tối";
         } else {
             document.documentElement.setAttribute("data-theme", "dark");
             localStorage.setItem("nhs_theme", "dark");
+            updateLogo(true);
             icon.className = "fa-solid fa-sun";
             if (themeText) themeText.textContent = "Chế độ sáng";
         }
@@ -505,7 +521,6 @@ async function addComment(uuid, text, submitBtn, commentInput) {
     const strUuid = String(uuid);
     const confession = currentConfessions.find(c => String(c.uuid) === strUuid);
     
-    // 1. Hiển thị ngay lập tức lên giao diện
     const tempComment = {
         content: text,
         time: new Date().toISOString()
@@ -520,7 +535,6 @@ async function addComment(uuid, text, submitBtn, commentInput) {
     commentInput.value = "";
     commentInput.style.height = "46px";
 
-    // 2. Tạo bản gửi lên Server
     let serverSendText = text;
     if (serverSendText.startsWith("=")) {
         serverSendText = "'" + serverSendText;
@@ -534,7 +548,6 @@ async function addComment(uuid, text, submitBtn, commentInput) {
             body: JSON.stringify({ action: "comment", uuid: strUuid, content: serverSendText })
         });
         
-        // Delay 1.5 giây để server lưu xong vào Sheets, sau đó mới đồng bộ lại dữ liệu
         setTimeout(async () => {
             lastRawDataString = "";
             await loadApprovedConfessions();
@@ -639,7 +652,6 @@ if (input) {
     });
 }
 
-// --- Xử lý bật/tắt Emoji chính ---
 const mainEmojiToggleBtn = form ? form.querySelector(".emoji_toggle_btn") : null;
 const mainEmojiContainer = form ? form.querySelector(".emoji_picker_container") : null;
 
