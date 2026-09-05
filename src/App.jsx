@@ -49,7 +49,15 @@ export default function App() {
       const next = [...current];
       data.forEach((item) => {
         const index = next.findIndex((entry) => String(entry.uuid) === String(item.uuid));
-        const normalized = { ...item, uuid: item.uuid, status: item.status || "approved", content: item.content || "", likes: Number(item.likes) || 0, commentCount: Number(item.commentCount) || 0, comments: index >= 0 ? next[index].comments : null };
+        const normalized = {
+          ...item,
+          uuid: item.uuid,
+          status: item.status || "approved",
+          content: item.content || "",
+          likes: Number(item.likes) || 0,
+          commentCount: Number(item.commentCount) || 0,
+          comments: Array.isArray(item.comments) ? item.comments : index >= 0 ? next[index].comments : null,
+        };
         if (index >= 0) next[index] = { ...next[index], ...normalized };
         else next.push(normalized);
       });
