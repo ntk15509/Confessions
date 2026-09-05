@@ -261,6 +261,16 @@ $radius-sm: 8px;
   padding: 0;
 }
 
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  flex: 1 1 100%;
+  overflow-x: clip;
+}
+
 body {
   font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: var(--bg-gradient);
@@ -271,6 +281,7 @@ body {
   justify-content: center;
   padding: 30px 16px 60px;
   line-height: 1.6;
+  overflow-x: hidden;
 
   &.confession-modal-open {
     overflow: hidden;
@@ -280,9 +291,20 @@ body {
 .app_container {
   width: 100%;
   max-width: 1100px;
+  min-width: 0;
+  flex: 0 1 1100px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 22px;
+  width: 100%;
+  min-width: 0;
+
+  h1,
+  h4 {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
 }
 
 .hero_section {
@@ -305,6 +327,7 @@ body {
   border-radius: var(--radius-lg);
   padding: 22px 24px;
   box-shadow: var(--shadow-md);
+  min-width: 0;
 }
 
 #theme_toggle_btn,
@@ -393,6 +416,8 @@ h4 {
   gap: 10px;
   text-align: left;
   max-width: 710px;
+  width: 100%;
+  min-width: 0;
 
   .info_icon {
     font-size: 1.1rem;
@@ -423,6 +448,11 @@ h4 {
     display: flex;
     gap: 10px;
     align-items: stretch;
+    min-width: 0;
+  }
+
+  .textarea_wrapper {
+    min-width: 0;
   }
 
   button[type="submit"] {
@@ -565,12 +595,14 @@ h4 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+  min-width: 0;
 }
 
 .search_box {
   position: relative;
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 
 .search_icon {
@@ -584,6 +616,7 @@ h4 {
 #search_input,
 #search_date_input {
   width: 100%;
+  min-width: 0;
   padding: 11px 14px 11px 38px;
   font-family: inherit;
   font-size: 0.9rem;
@@ -612,6 +645,7 @@ h4 {
   border-radius: var(--radius-lg);
   padding: 20px;
   box-shadow: var(--shadow-md);
+  min-width: 0;
 
   &_header {
     font-size: 0.98rem;
@@ -653,6 +687,7 @@ h4 {
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease;
   cursor: pointer;
   position: relative;
+  min-width: 0;
   height: 240px;
   overflow: hidden;
 
@@ -985,6 +1020,7 @@ h4 {
   top: 0;
   left: 0;
   width: 100vw;
+  max-width: 100%;
   height: 100vh;
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
@@ -1197,6 +1233,7 @@ h4 {
 
 .announcement_accordion {
   width: 100%;
+  min-width: 0;
   margin-bottom: 24px;
   background: var(--bg-card, #ffffff);
   border-radius: 12px;
@@ -1207,6 +1244,7 @@ h4 {
 
 .announcement_toggle_btn {
   width: 100%;
+  min-width: 0;
   padding: 16px 20px;
   display: flex;
   justify-content: space-between;
@@ -1230,10 +1268,17 @@ h4 {
   &.active .toggle_icon {
     transform: rotate(180deg);
   }
+
+  span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
 }
 
 .announcement_wrapper {
   display: flex;
+  width: 100%;
+  min-width: 0;
   align-items: center;
   position: relative;
   padding: 16px 12px;
@@ -1255,6 +1300,8 @@ h4 {
 
 .announcement_carousel_track {
   display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
   gap: 16px;
   overflow-x: auto;
   scroll-behavior: smooth;
@@ -1267,8 +1314,8 @@ h4 {
   }
 
   .announcement_box {
-    flex: 0 0 280px;
-    max-width: 280px;
+    flex: 0 0 min(280px, 100%);
+    max-width: 100%;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
@@ -1390,5 +1437,38 @@ h4 {
 
   .box {
     height: 250px;
+  }
+
+  .announcement_wrapper {
+    padding: 16px 0;
+  }
+
+  .announcement_carousel_track {
+    width: 100%;
+    padding: 8px 4px;
+
+    .announcement_box {
+      flex-basis: 100%;
+      width: 100%;
+    }
+  }
+
+  .announcement_wrapper > .carousel_btn {
+    position: absolute;
+    top: 50%;
+    margin: 0;
+    transform: translateY(-50%);
+
+    &:hover {
+      transform: translateY(-50%) scale(1.1);
+    }
+  }
+
+  .announcement_wrapper > .prev_btn {
+    left: 8px;
+  }
+
+  .announcement_wrapper > .next_btn {
+    right: 8px;
   }
 }
