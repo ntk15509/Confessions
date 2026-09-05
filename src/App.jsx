@@ -5,6 +5,7 @@ import Announcements from "./components/Announcements";
 import ConfessionCard from "./components/ConfessionCard";
 import EmojiPicker from "./components/EmojiPicker";
 import Modal from "./components/Modal";
+import incognitoLogo from "./assets/incognito.svg";
 
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem("nhs_theme") === "dark" ? "dark" : "light");
@@ -130,7 +131,7 @@ export default function App() {
     <header className="hero_section">
       <button id="readme_toggle_btn" title="Hướng dẫn sử dụng / README" onClick={() => setReadmeOpen(true)}><i className="fa-solid fa-book-open" /><span>README</span></button>
       <button id="theme_toggle_btn" title="Chuyển đổi giao diện" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}><i className={`fa-solid fa-${theme === "dark" ? "sun" : "moon"}`} /><span className="theme_text">{theme === "dark" ? "Chế độ sáng" : "Chế độ tối"}</span></button>
-      <div id="picture"><img src={`${import.meta.env.BASE_URL}incognito.svg`} alt="incognito logo" /></div>
+      <div id="picture"><img src={incognitoLogo} alt="incognito logo" /></div>
       <div className="header_titles"><h1>NHSC Confessions</h1><h4><i className="fa-solid fa-clock-rotate-left" /> Bài viết sẽ được hiển thị công khai sau khi được kiểm duyệt</h4></div>
       <div id="chu_thich"><i className="fa-solid fa-circle-info info_icon" /><span>Nơi chia sẻ ẩn danh tâm tư, kỷ niệm học đường một cách tự do và có chừng mực.</span></div>
     </header>
