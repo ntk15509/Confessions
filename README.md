@@ -1,4 +1,3 @@
-
 ## 🇬🇧
 This website was inspired by my high school days, when students had a strong desire to share their thoughts freely. What they needed was absolute anonymity and a fast, convenient way to submit posts.
 
