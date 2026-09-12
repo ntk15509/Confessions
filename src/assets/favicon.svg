@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="favicon-gradient" x1="235" y1="500" x2="835" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ed2f91"/>
+      <stop offset=".48" stop-color="#b43fd0"/>
+      <stop offset="1" stop-color="#3567ee"/>
+    </linearGradient>
+  </defs>
+  <g fill="url(#favicon-gradient)">
+    <path d="M343 379 396 208c6-20 15-26 29-22 24 6 52 23 75 29 19 5 31 3 48-3l48-22c19-9 29-3 35 18l50 171Z"/>
+    <path d="M323 398c91-1 286-1 378 0 43 6 75 21 75 34 0 14-37 21-90 21H338c-51 0-88-7-88-20 0-13 31-28 73-35Z"/>
+    <circle cx="422" cy="540" r="66"/>
+    <circle cx="422" cy="540" r="39" fill="#fff"/>
+    <circle cx="602" cy="540" r="66"/>
+    <circle cx="602" cy="540" r="39" fill="#fff"/>
+    <path d="M477 539c12-18 24-21 35-21s23 3 35 21l-12 14c-9-13-16-16-24-16s-15 3-24 16Z"/>
+    <path d="M468 678c-35-26-76-52-117-75-35-20-73-39-92-44-6-2-8 3-5 11l40 96c-47 28-80 73-96 123-4 12-6 22-6 32h316Z"/>
+    <path d="M556 678c35-26 76-52 117-75 35-20 73-39 92-44 6-2 8 3 5 11l-40 96c47 28 80 73 96 123 4 12 6 22 6 32H516Z"/>
+  </g>
+</svg>

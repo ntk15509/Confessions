@@ -418,7 +418,7 @@ h4 {
   align-items: flex-start;
   gap: 10px;
   text-align: left;
-  max-width: 710px;
+  max-width: 612px;
   width: 100%;
   min-width: 0;
 
@@ -540,8 +540,8 @@ h4 {
     left: 0;
     top: calc(100% + 8px);
     width: 100%;
-    background: #f8fafc;
-    border: 1.5px solid $card-border-light;
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
     border-radius: var(--radius-md);
     padding: 10px;
     max-height: 150px;
@@ -725,12 +725,13 @@ h4 {
   }
 
   &.modal_focused {
+    --confession-card-height: min(600px, 95vh);
     position: fixed !important;
     top: 50% !important;
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
     width: 600px !important;
-    height: 600px !important;
+    height: var(--confession-card-height) !important;
     max-width: 95vw !important;
     max-height: 95vh !important;
     z-index: 999 !important;
@@ -749,6 +750,7 @@ h4 {
 
     .confession_content {
       flex: 1 !important;
+      min-height: 0;
       max-height: none !important;
       overflow-y: auto !important;
       padding-right: 6px;
@@ -761,7 +763,11 @@ h4 {
     }
 
     .comment_list {
-      max-height: 250px;
+      max-height: calc(var(--confession-card-height) * 0.3);
+    }
+
+    .comments_section {
+      flex-shrink: 0;
     }
   }
 }
@@ -886,6 +892,7 @@ h4 {
   margin-top: 12px;
   padding-top: 12px;
   border-top: 2px solid #e2e8f0;
+  min-height: 0;
 }
 
 .comment_list {
@@ -915,6 +922,11 @@ h4 {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  position: sticky;
+  bottom: 0;
+  padding-top: 6px;
+  background: inherit;
+  z-index: 1;
 }
 
 .comment_form {
@@ -1115,10 +1127,6 @@ h4 {
     word-break: break-all;
   }
 }
-
-// ==========================================
-// 9. PROJECT AUTHOR & FEEDBACK
-// ==========================================
 
 .project_author {
   margin-top: 25px;
@@ -1376,10 +1384,6 @@ h4 {
     transform: translate(-50%, -50%) scale(1);
   }
 }
-
-// ==========================================
-// 12. MEDIA QUERIES
-// ==========================================
 
 @media (max-width: 960px) {
   .date_block_grid {
